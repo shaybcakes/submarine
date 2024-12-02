@@ -1,0 +1,17 @@
+[gd_scene load_steps=5 format=3 uid="uid://dr3plyovbkr1v"]
+
+[ext_resource type="Script" path="res://game.gd" id="1_jcibm"]
+[ext_resource type="PackedScene" uid="uid://crd5d22b2040f" path="res://submarine.tscn" id="1_o7ufm"]
+[ext_resource type="PackedScene" uid="uid://bxu0a0ctmgyay" path="res://level1.glb" id="2_2apy5"]
+[ext_resource type="Script" path="res://character_body_3d.gd" id="4_wm8e2"]
+
+[node name="Game" type="Node3D"]
+script = ExtResource("1_jcibm")
+
+[node name="Submarine" parent="." instance=ExtResource("1_o7ufm")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 27.5239, 0)
+
+[node name="level1" parent="." instance=ExtResource("2_2apy5")]
+
+[node name="CharacterBody3D" type="CharacterBody3D" parent="."]
+script = ExtResource("4_wm8e2")
