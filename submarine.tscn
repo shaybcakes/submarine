@@ -11,27 +11,6 @@
 radius = 0.98
 height = 3.897
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0k5kk"]
-albedo_color = Color(0, 1, 0, 1)
-metallic_specular = 0.0
-
-[sub_resource type="BoxMesh" id="BoxMesh_ubmay"]
-material = SubResource("StandardMaterial3D_0k5kk")
-size = Vector3(0.545, 0.295, 0.025)
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_f7d4i"]
-size = Vector3(0.545, 0.295, 0.025)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_3k68w"]
-albedo_color = Color(1, 0.00784314, 0.0196078, 1)
-
-[sub_resource type="BoxMesh" id="BoxMesh_i7yau"]
-material = SubResource("StandardMaterial3D_3k68w")
-size = Vector3(0.545, 0.295, 0.025)
-
-[sub_resource type="QuadMesh" id="QuadMesh_wgv06"]
-size = Vector2(0.001, 0.001)
-
 [sub_resource type="Animation" id="Animation_t8pnt"]
 length = 0.001
 tracks/0/type = "value"
@@ -88,15 +67,35 @@ _data = {
 "prop_reverse": SubResource("Animation_j88as")
 }
 
-[node name="Submarine" type="CharacterBody3D"]
-motion_mode = 1
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0k5kk"]
+albedo_color = Color(0, 1, 0, 1)
+metallic_specular = 0.0
+
+[sub_resource type="BoxMesh" id="BoxMesh_ubmay"]
+material = SubResource("StandardMaterial3D_0k5kk")
+size = Vector3(0.545, 0.295, 0.025)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_f7d4i"]
+size = Vector3(0.545, 0.295, 0.025)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_3k68w"]
+albedo_color = Color(1, 0.00784314, 0.0196078, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_i7yau"]
+material = SubResource("StandardMaterial3D_3k68w")
+size = Vector3(0.545, 0.295, 0.025)
+
+[sub_resource type="QuadMesh" id="QuadMesh_wgv06"]
+size = Vector2(0.001, 0.001)
+
+[node name="Submarine" type="RigidBody3D"]
+gravity_scale = 0.0
 script = ExtResource("1_to71d")
+YSPEED = 1
 
 [node name="submarine no prop" parent="." instance=ExtResource("1_kyjra")]
 
 [node name="RigidBody3D" type="RigidBody3D" parent="submarine no prop"]
-collision_layer = 2
-collision_mask = 2
 gravity_scale = 0.0
 script = ExtResource("4_6n41f")
 
@@ -111,40 +110,6 @@ script = ExtResource("5_qpdph")
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="submarine no prop"]
 transform = Transform3D(1, 0, 0, 0, -1, 8.74228e-08, 0, -8.74228e-08, -1, 0, 0, 1.97452)
 sky_mode = 1
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0)
-shape = SubResource("CapsuleShape3D_y24mp")
-
-[node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(-0.999999, 4.17146e-08, -7.68286e-08, 0, 0.878817, 0.477159, 8.74227e-08, 0.477159, -0.878817, 0, 6.113, -7.192)
-current = true
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Camera3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.285, -1.25, -1.97)
-mesh = SubResource("BoxMesh_ubmay")
-
-[node name="Area3D" type="Area3D" parent="Camera3D/MeshInstance3D"]
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Camera3D/MeshInstance3D/Area3D"]
-shape = SubResource("BoxShape3D_f7d4i")
-
-[node name="MeshInstance3D2" type="MeshInstance3D" parent="Camera3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.485, -1.25, -1.97)
-mesh = SubResource("BoxMesh_i7yau")
-
-[node name="Area3D" type="Area3D" parent="Camera3D/MeshInstance3D2"]
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Camera3D/MeshInstance3D2/Area3D"]
-shape = SubResource("BoxShape3D_f7d4i")
-
-[node name="MeshInstance3D3" type="MeshInstance3D" parent="Camera3D"]
-transform = Transform3D(0.96, 0, 0, 0, 0.62, 0, 0, 0, 0.96, -1.81, -1.035, -1.865)
-mesh = SubResource("QuadMesh_wgv06")
-
-[node name="Label3D" type="Label3D" parent="Camera3D/MeshInstance3D3"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.25, 0.3, 0.035)
-text = "Test"
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {
@@ -161,5 +126,62 @@ omni_range = 22.575
 node_a = NodePath("..")
 node_b = NodePath("../submarine no prop/RigidBody3D")
 
-[connection signal="input_event" from="Camera3D/MeshInstance3D/Area3D" to="." method="_on_area_3d_input_event"]
-[connection signal="input_event" from="Camera3D/MeshInstance3D2/Area3D" to="." method="_on_area_3d_input_event_brake"]
+[node name="CamNode" type="Node3D" parent="."]
+
+[node name="Camera3D" type="Camera3D" parent="CamNode"]
+transform = Transform3D(-1, 4.17146e-08, -7.68286e-08, 0, 0.878817, 0.477159, 8.74228e-08, 0.477159, -0.878817, 0, 6.113, -7.192)
+current = true
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="CamNode/Camera3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.285, -1.25, -1.97)
+visible = false
+mesh = SubResource("BoxMesh_ubmay")
+
+[node name="Area3D" type="Area3D" parent="CamNode/Camera3D/MeshInstance3D"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="CamNode/Camera3D/MeshInstance3D/Area3D"]
+shape = SubResource("BoxShape3D_f7d4i")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="CamNode/Camera3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.485, -1.25, -1.97)
+visible = false
+mesh = SubResource("BoxMesh_i7yau")
+
+[node name="Area3D" type="Area3D" parent="CamNode/Camera3D/MeshInstance3D2"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="CamNode/Camera3D/MeshInstance3D2/Area3D"]
+shape = SubResource("BoxShape3D_f7d4i")
+
+[node name="MeshInstance3D3" type="MeshInstance3D" parent="CamNode/Camera3D"]
+transform = Transform3D(0.96, 0, 0, 0, 0.62, 0, 0, 0, 0.96, -1.81, -1.035, -1.865)
+mesh = SubResource("QuadMesh_wgv06")
+
+[node name="Label3D" type="Label3D" parent="CamNode/Camera3D/MeshInstance3D3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.25, 0.3, 0.035)
+text = "Test"
+
+[node name="Label3D2" type="Label3D" parent="CamNode/Camera3D/MeshInstance3D3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.775, -0.305, 0.035)
+text = "Test"
+
+[node name="Time" type="Label3D" parent="CamNode/Camera3D/MeshInstance3D3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.79, 3.455, 0.035)
+text = "Test"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0)
+shape = SubResource("CapsuleShape3D_y24mp")
+
+[node name="AimMarker" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 25.3663)
+
+[node name="RayCast3D" type="RayCast3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.103665, 2.38419e-07, -0.252098)
+target_position = Vector3(0, 0, 2.395)
+collision_mask = 2
+collide_with_areas = true
+collide_with_bodies = false
+debug_shape_custom_color = Color(1, 0, 0, 1)
+
+[connection signal="input_event" from="CamNode/Camera3D/MeshInstance3D/Area3D" to="." method="_on_area_3d_input_event"]
+[connection signal="input_event" from="CamNode/Camera3D/MeshInstance3D2/Area3D" to="." method="_on_area_3d_input_event_brake"]

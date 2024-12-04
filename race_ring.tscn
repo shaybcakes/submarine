@@ -1,0 +1,27 @@
+[gd_scene load_steps=4 format=3 uid="uid://buvi3qq20xnpq"]
+
+[ext_resource type="Material" uid="uid://c8oihh4nqy5gk" path="res://race_ring_green.material" id="1_lbjov"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_tgcfy"]
+height = 0.125
+radius = 3.5
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_aecsf"]
+material = ExtResource("1_lbjov")
+top_radius = 3.5
+bottom_radius = 3.5
+height = 0.125
+radial_segments = 12
+rings = 0
+
+[node name="race_ring" type="Area3D"]
+collision_layer = 2
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0)
+shape = SubResource("CylinderShape3D_tgcfy")
+
+[node name="Mesh" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0)
+mesh = SubResource("CylinderMesh_aecsf")

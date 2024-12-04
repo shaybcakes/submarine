@@ -7,16 +7,42 @@ var ang_vel:Vector3 = Vector3.ZERO
 var yaw_rot = 0
 var pitch_rot = 0
 var roll_rot = 0
+var rings_list = []
+
+@onready var sub_space = [$Submarine.position,$Submarine.rotation]
+
+var elapsed:int = 0
+
+@onready var subcast:RayCast3D = $Submarine/RayCast3D
+@onready var subtime:Label3D = $Submarine/CamNode/Camera3D/MeshInstance3D3/Time
+
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	pass # Replace with function body.
-
+	for ring in $rings.get_children():
+		rings_list.append(ring)
+		ring.hide()
+	rings_list[0].show()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
-	pass
-
+	if subtime.get_text() == "Test" and $Timer.is_stopped():
+		subtime.set_text("Hit Green Ring\nTo Start")
+	elif not $Timer.is_stopped():
+		subtime.set_text(str(elapsed)+"s")
+		
+	if subcast.is_colliding():
+		if subcast.get_collider() == rings_list[0]:
+			print(len(rings_list))
+			if len(rings_list) == 10:
+				elapsed = 0
+				$Timer.start()
+			rings_list[0].hide()
+			rings_list.pop_front()
+			rings_list[0].show()
+			if len(rings_list) == 0:
+				$Timer.stop()
+		
 func _physics_process(delta: float) -> void:
 	pitch_rot = 0
 	yaw_rot = 0
@@ -33,7 +59,23 @@ func _physics_process(delta: float) -> void:
 	roll_rot += roll_delta
 	
 	#transform.basis = Basis()
-	sub.rotate_object_local(Vector3(1,0,0),pitch_rot*0.01)
-	sub.rotate_object_local(Vector3(0,1,0),yaw_rot*0.01)
-	sub.rotate_object_local(Vector3(0,0,1),roll_rot*0.01)
+	sub.rotate_object_local(Vector3(1,0,0),pitch_rot*0.005)
+	sub.rotate_object_local(Vector3(0,1,0),yaw_rot*0.005)
+	sub.rotate_object_local(Vector3(0,0,1),roll_rot*0.002)
 	
+
+func _input(event: InputEvent) -> void:
+	if event.is_action_pressed("reset"):
+		$Submarine.set_linear_velocity(Vector3(0,0,0))
+		$Submarine.position = sub_space[0]
+		$Submarine.rotation = sub_space[1]
+		rings_list = []
+		for ring in $rings.get_children():
+			rings_list.append(ring)
+			ring.hide()
+		rings_list[0].show()
+		$Timer.stop()
+		subtime.set_text("Hit Green Ring\nTo Start")
+
+func _on_timer_timeout() -> void:
+	elapsed += 1
